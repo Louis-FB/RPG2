@@ -11,15 +11,44 @@ void welcome() {
 }
 
 bool play();
+void turn();
+
+bool test() {
+    return false;
+}
 
 int main()
 {
     welcome();
     std::string name{ getName() };
-    std::cout << "Welcome to C++ RPG 2, " << name;
+    std::cout << "Welcome to C++ RPG 2, " << name << '\n';
+
+    
+    if (!play) {
+        std::cout << "You lost\n";
+    }
+    else {
+        std::cout << "Congratulations, you won!\n";
+    }
+    
+    
+
+    //std::cout << "Thanks for playing\n";
 }
 
+
 bool play() {
+    int rounds{ 0 };
+    // instantiated user object
+    while (true) // While user is alive
+    {
+        ++rounds;
+        break;
+    }
+    return true; // remove
+}
+
+void turn() {
 
 }
 
