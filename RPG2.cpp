@@ -24,7 +24,7 @@ int main()
     std::cout << "Welcome to C++ RPG 2, " << name << '\n';
 
     
-    if (!play) {
+    if (!play()) {
         std::cout << "You lost\n";
     }
     else {
@@ -45,7 +45,7 @@ bool play() {
         ++rounds;
         break;
     }
-    return true; // remove
+    return false; // remove
 }
 
 void turn() {
