@@ -6,6 +6,7 @@
 class Player: public Entity  {
 private:
 	std::string m_name{};
+	// current position?
 
 public:
 	Player(std::string name)

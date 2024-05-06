@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include "Player.h"
 
 
 std::string getName();
@@ -10,7 +11,7 @@ void welcome() {
     std::cout << "   _____             _____  _____   _____   ___  \n  / ____|_     _    |  __ \\|  __ \\ / ____| |__ \\ \n | |   _| |_ _| |_  | |__) | |__) | |  __     ) |\n | |  |_   _|_   _| |  _  /|  ___/| | |_ |   / / \n | |____|_|   |_|   | | \\ \\| |    | |__| |  / /_ \n  \\_____|           |_|  \\_\\_|     \\_____| |____|\n";
 }
 
-bool play();
+bool play(std::string& name);
 void turn();
 
 bool test() {
@@ -24,7 +25,7 @@ int main()
     std::cout << "Welcome to C++ RPG 2, " << name << '\n';
 
     
-    if (!play()) {
+    if (!play(name)) {
         std::cout << "You lost\n";
     }
     else {
@@ -37,18 +38,34 @@ int main()
 }
 
 
-bool play() {
+bool play(std::string& name) {
     int rounds{ 0 };
+
+    Player player{name};
     // instantiated user object
-    while (true) // While user is alive
+    while (player.getHP() > 0) // While user is alive
     {
+
+        if (player.getLevel() >= 10) {
+            return true;
+        }
         ++rounds;
+        // Get decision input here
+        // Call turn with input
+        
         break;
     }
-    return false; // remove
+    return false;
 }
 
 void turn() {
+    
+    // Map to navigate
+    int map[3][3]{
+        {0, 2, 0},
+        {1, 1, 1},
+        {0, 1, 0},
+    };
 
 }
 

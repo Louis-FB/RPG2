@@ -19,4 +19,7 @@ public:
 		, m_level{ level }
 		{};
 
+		int getHP() { return m_hp; };
+		int getLevel() { return m_level; }
+
 };
