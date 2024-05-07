@@ -8,11 +8,12 @@ std::string getName();
 void ignoreLine();
 
 void welcome() {
-    std::cout << "   _____             _____  _____   _____   ___  \n  / ____|_     _    |  __ \\|  __ \\ / ____| |__ \\ \n | |   _| |_ _| |_  | |__) | |__) | |  __     ) |\n | |  |_   _|_   _| |  _  /|  ___/| | |_ |   / / \n | |____|_|   |_|   | | \\ \\| |    | |__| |  / /_ \n  \\_____|           |_|  \\_\\_|     \\_____| |____|\n";
+    //std::cout << "   _____             _____  _____   _____   ___  \n  / ____|_     _    |  __ \\|  __ \\ / ____| |__ \\ \n | |   _| |_ _| |_  | |__) | |__) | |  __     ) |\n | |  |_   _|_   _| |  _  /|  ___/| | |_ |   / / \n | |____|_|   |_|   | | \\ \\| |    | |__| |  / /_ \n  \\_____|           |_|  \\_\\_|     \\_____| |____|\n";
+    std::cout << "C++ RPG\n";
 }
 
 bool play(std::string& name);
-void turn();
+void turn(Player& p);
 
 bool test() {
     return false;
@@ -52,20 +53,23 @@ bool play(std::string& name) {
         ++rounds;
         // Get decision input here
         // Call turn with input
+        turn(player);
         
-        break;
+        break; // testing
     }
     return false;
 }
 
-void turn() {
-    
+void turn(Player& p) {
+    std::cout << "Playing round\n";
     // Map to navigate
     int map[3][3]{
         {0, 2, 0},
-        {1, 1, 1},
+        {1, 8, 1},
         {0, 1, 0},
     };
+
+    std::cout << "Player at " << map[p.getCoordX()][p.getCoordY()] << '\n';
 
 }
 
