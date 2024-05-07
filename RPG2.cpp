@@ -113,7 +113,7 @@ std::string getName() { // Get name of user
 
 char getInput() {
     while (true) {
-        //Map::drawMap(); // delete
+        Map::drawMap(); // delete
         std::cout << "North (w), West (a), South (s), East (d)\n";
         char input{};
         std::cin >> input;
