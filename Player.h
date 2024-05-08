@@ -10,7 +10,7 @@ private:
 
 public:
 	Player(std::string name)
-		: m_name{ name }, Entity{}
+		: Entity{name}
 	{};
 
 	/*

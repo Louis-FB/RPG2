@@ -4,26 +4,16 @@
 #include "Player.h"
 #include "Game.h"
 #include "Map.h"
+#include "Monster.h"
 
 std::string getName();
 void ignoreLine();
 char getInput();
 bool move(char direction, Player& p, Game& g);
-
-
-
-void welcome() {
-    //std::cout << "   _____             _____  _____   _____   ___  \n  / ____|_     _    |  __ \\|  __ \\ / ____| |__ \\ \n | |   _| |_ _| |_  | |__) | |__) | |  __     ) |\n | |  |_   _|_   _| |  _  /|  ___/| | |_ |   / / \n | |____|_|   |_|   | | \\ \\| |    | |__| |  / /_ \n  \\_____|           |_|  \\_\\_|     \\_____| |____|\n";
-    //std::cout << "You wake up in a dark dungeon\n";
-    std::cout << "C++ RPG 2\n";
-}
-
+void welcome();
 bool play(std::string& name);
 void turn(Player& p, Game& g);
-
-bool test() {
-    return false;
-}
+void monsterRound(Player& p, Game& g);
 
 int main()
 {
@@ -40,6 +30,12 @@ int main()
     }
     
     std::cout << "Thanks for playing\n";
+}
+
+void welcome() {
+    //std::cout << "   _____             _____  _____   _____   ___  \n  / ____|_     _    |  __ \\|  __ \\ / ____| |__ \\ \n | |   _| |_ _| |_  | |__) | |__) | |  __     ) |\n | |  |_   _|_   _| |  _  /|  ___/| | |_ |   / / \n | |____|_|   |_|   | | \\ \\| |    | |__| |  / /_ \n  \\_____|           |_|  \\_\\_|     \\_____| |____|\n";
+    //std::cout << "You wake up in a dark dungeon\n";
+    std::cout << "C++ RPG 2\n";
 }
 
 
@@ -59,7 +55,10 @@ bool play(std::string& name) {
         // Get decision input here
         // Call turn with input
         std::cout << "Round " << game.getRounds() << '\n';
+        Map::drawMap(game);
         turn(player, game);
+        
+        
         
         //break; // testing
     }
@@ -81,6 +80,21 @@ void turn(Player& p, Game& g) {
         }
     }
 
+    Map::mapSymbols currentRoomType{ Map::map[g.getCoordY()][g.getCoordX()] };
+    //Map::markMap(g.getCoordY(), g.getCoordX());
+
+    switch (currentRoomType) {
+    case Map::C: // corridor
+        std::cout << "You continue through the dark corridor\n";
+        break;
+    case Map::M:
+        monsterRound(p, g);
+        // fight
+        break;
+    default: // unknown
+        std::cout << "Unknown room\n";
+        break;
+    }
     // Check user location for what to appear in room
 
 
@@ -113,7 +127,7 @@ std::string getName() { // Get name of user
 
 char getInput() {
     while (true) {
-        Map::drawMap(); // delete
+        
         std::cout << "North (w), West (a), South (s), East (d)\n";
         char input{};
         std::cin >> input;
@@ -128,12 +142,13 @@ char getInput() {
 
 bool move(char direction, Player& p, Game& g) { // bounds checking and check if way is blocked? // count elements?
     int room{};
-    //std::cout << "Current room: " << map[p.getCoordY()][p.getCoordX()] << '\n';
+    Map::markMap(g.getCoordY(), g.getCoordX());
+
     switch (direction) {
     case 'w': // Move 'north'
         if (g.getCoordY() - 1 >= 0) { // Check array bounds 'up'
             room = Map::map[g.getCoordY() - 1][g.getCoordX()];
-            if (room == 0) { // If room is unavailable
+            if (room == Map::W) { // If room is unavailable
                 break;
             }
             // Update user position and return true
@@ -145,7 +160,7 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
     case 'a': // Move 'west'
         if (g.getCoordX() - 1 >= 0) { // Check array bounds left
             room = Map::map[g.getCoordY()][g.getCoordX() - 1];
-            if (room == 0) { // If room is unavailable
+            if (room == Map::W) { // If room is unavailable
                 break;
             }
             g.changeLocation(g.getCoordY(), g.getCoordX() - 1);
@@ -154,21 +169,22 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
         }
         break; 
     case 's': // move 'south'
-        if (g.getCoordY() + 1 <= Map::ROW) {
+        if (g.getCoordY() + 1 < Map::ROW) {
             room = Map::map[g.getCoordY() + 1][g.getCoordX()];
-            if (room == 0) { // If room is unavailable
+            if (room == Map::W) { // If room is unavailable
                 break;
             }
             // Update user position and return true
             g.changeLocation(g.getCoordY() + 1, g.getCoordX());
             std::cout << "You moved south\n";
+            std::cout << "South room: " << Map::map[g.getCoordY()][g.getCoordX()] << " Y: " << g.getCoordY() << " X: " << g.getCoordX() << '\n';
             return true;
         }
         break;
     case 'd': // move 'east'
-        if (g.getCoordX() + 1 <= Map::COL) {
+        if (g.getCoordX() + 1 < Map::COL) {
             room = Map::map[g.getCoordY()][g.getCoordX() + 1];
-            if (room == 0) { 
+            if (room == Map::W) { 
                 break;
             }
             g.changeLocation(g.getCoordY(), g.getCoordX() + 1);
@@ -179,6 +195,26 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
 }
     std::cout << "The way is blocked\n";
     return false;
-    // check availability of move.
-    // Update user location
+}
+
+void monsterRound(Player& p, Game& g) {
+    std::cout << "Monster fight\n"; // test
+        
+    // generate monster
+
+    // loop
+    while (true) {
+
+        std::cout << "Monster fight loop\n";
+        Monster monster{};
+        std::cout << "Monster name: " << monster.getName() << '\n';
+
+        break;
+    }
+
+        // player action
+
+        // monster attack
+
+    // loop end
 }

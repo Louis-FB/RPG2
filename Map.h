@@ -5,49 +5,49 @@ namespace Map {
     const int COL{ 11 };
 
     enum mapSymbols {
-        blank,
-        corridor,
-        monsterUndefeated,
-        monsterDefeated,
-        merchant,
-        treasure,
-        boss,
+        C, // corridor
+        X, // defeated monster
+        M, // undefeated monster
+        S, // shop
+        T, // treasure
+        B, // boss
+        W, // wall
         maxSize,
     };
 
-    const int map[ROW][COL]{
-        {1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1},
-        {0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0},
-        {1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0},
-        {1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0},
-        {1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1},
-        {0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
-        {1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1},
-        {1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0},
-        {1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1},
-        {0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1},
-        {0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0},
+    mapSymbols map[ROW][COL]{
+        {C, C, W, C, C, C, C, W, W, C, C},
+        {W, C, C, C, W, W, C, C, W, C, W},
+        {C, C, W, W, C, C, W, C, C, C, W},
+        {C, W, C, W, M, W, C, C, W, C, W},
+        {C, C, C, W, C, C, W, C, C, C, C},
+        {W, C, C, C, C, C, C, C, C, T, B},
+        {C, C, W, C, W, C, W, W, W, C, C},
+        {C, W, W, C, C, C, C, W, C, C, W},
+        {C, C, C, W, W, W, B, W, C, W, C},
+        {W, W, C, C, C, W, M, C, C, C, C},
+        {W, C, C, W, C, C, T, W, C, W, W},
     };
 
-    mapSymbols blankMap[ROW][COL]{ // Draw 1 where user goes
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
-        {blank, blank, blank, blank, blank, blank, blank, blank, blank, blank, blank},
+    int blankMap[ROW][COL]{ // Guide of discovered locations 1 = discovered, 0 = undiscovered
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
-    void markMap(int x, int y, int symbol) {
-        blankMap[x][y] = static_cast<mapSymbols>(symbol);
+    void markMap(int x, int y) {
+        blankMap[x][y] = 1;
     }
 
-    void drawMap() {
+    void drawMap(Game& g) {
         // nested for loop draw square where element is 1, otherwise blank.
         
         for (int i{ 0 }; i < ROW; ++i) {
@@ -59,33 +59,44 @@ namespace Map {
                 std::cout << '\u3008';
             }
             */
-            std::cout << '|';
+            std::cout << "| ";
             for (int j{ 0 }; j < COL; ++j) {
-             
-                switch (blankMap[i][j]) {
-                case blank:
-                    std::cout << ' ';
+                
+                if (i == g.getCoordY() && j == g.getCoordX()) {
+                    std::cout << "^ ";
+                    continue;
+                }
+
+                if (blankMap[i][j] == 0) { // If undiscovered element, print blank and skip
+                    std::cout << "  ";
+                    continue;
+                }
+                    
+
+                switch (map[i][j]) {
+                case C: // corridor
+                    std::cout << "# ";
                     break;
-                case corridor:
-                    std::cout << 'X';
+                case M: // monster
+                    std::cout << "M ";
                     break;
-                case monsterUndefeated:
-                    std::cout << 'M';
+                case X: // defeated monster
+                    std::cout << "X ";
                     break;
-                case monsterDefeated:
-                    std::cout << 'X';
+                case S: // shop
+                    std::cout << "S ";
                     break;
-                case merchant:
-                    std::cout << 'S';
+                case T: // treasure
+                    std::cout << "T ";
                     break;
-                case treasure:
-                    std::cout << 'T';
+                case B: // boss
+                    std::cout << "B ";
                     break;
-                case boss:
-                    std::cout << 'B';
+                case W: // wall
+                    std::cout << "  ";
                     break;
                 default:
-                    std::cout << '?';
+                    std::cout << "? ";
                     break;
                 }
             }
