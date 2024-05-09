@@ -1,5 +1,6 @@
 #pragma once
 
+
 struct Location {
 	int m_y{};
 	int m_x{};

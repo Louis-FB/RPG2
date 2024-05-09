@@ -13,6 +13,10 @@ public:
 		: Entity{name}
 	{};
 
+	bool hasWon() { // or move to game class
+		return this->getLevel() >= 10; // or another condition
+	}
+
 	/*
 	void changeLocation(int y, int x) { // Moves across multidimensional array. Logic validated in game.
 		m_location.m_y = y;

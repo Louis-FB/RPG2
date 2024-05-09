@@ -43,8 +43,12 @@ namespace Map {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
-    void markMap(int x, int y) {
-        blankMap[x][y] = 1;
+    void markMap(int y, int x) { // y swap with x??
+        blankMap[y][x] = 1;
+    }
+
+    void modifyMap(int y, int x, mapSymbols symbol) {
+        map[y][x] = symbol;
     }
 
     void drawMap(Game& g) {

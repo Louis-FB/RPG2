@@ -45,15 +45,12 @@ bool play(std::string& name) {
     Player player{name};
     Game game{};
     // instantiated user object
-    while (player.getHP() > 0) // While user is alive
+    while (player.checkAlive()) // While user is alive
     {
-
-        if (player.getLevel() >= 10) {
+        if (player.hasWon()) // replace with bool has won function
             return true;
-        }
+    
         game.incrementRounds();
-        // Get decision input here
-        // Call turn with input
         std::cout << "Round " << game.getRounds() << '\n';
         Map::drawMap(game);
         turn(player, game);
@@ -86,6 +83,9 @@ void turn(Player& p, Game& g) {
     switch (currentRoomType) {
     case Map::C: // corridor
         std::cout << "You continue through the dark corridor\n";
+        break;
+    case Map::X:
+        std::cout << "You come across the remains of a defeated monster\n";
         break;
     case Map::M:
         monsterRound(p, g);
@@ -201,20 +201,22 @@ void monsterRound(Player& p, Game& g) {
     std::cout << "Monster fight\n"; // test
         
     // generate monster
-
-    // loop
+    Monster monster{ getRandomMonster() };
+    //Monster monster{ MonsterNamespace::goblin };
+    std::cout << "You encountered a " << monster.getName() << '\n';
     while (true) {
-
-        std::cout << "Monster fight loop\n";
-        Monster monster{};
-        std::cout << "Monster name: " << monster.getName() << '\n';
-
-        break;
-    }
-
+        
         // player action
 
         // monster attack
 
-    // loop end
+        // if monster dead, replace map coordinate with defeated monster
+        
+        if (!monster.checkAlive()) {
+            std::cout << "You defeated the " << monster.getName() << '\n';
+            Map::modifyMap(g.getCoordY(), g.getCoordX(), Map::X);
+            break;
+        }
+        break; // testing
+    }// loop end
 }
