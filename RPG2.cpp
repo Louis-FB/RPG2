@@ -14,6 +14,7 @@ void welcome();
 bool play(std::string& name);
 void turn(Player& p, Game& g);
 void monsterRound(Player& p, Game& g);
+char getAction();
 
 int main()
 {
@@ -207,6 +208,10 @@ void monsterRound(Player& p, Game& g) {
     while (true) {
         
         // player action
+        //
+        // switch statement for action
+        //attack(p, monster)
+        char action{ getAction() };
 
         // monster attack
 
@@ -219,4 +224,8 @@ void monsterRound(Player& p, Game& g) {
         }
         break; // testing
     }// loop end
+}
+
+char getAction() {
+    return 'a';
 }
