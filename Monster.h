@@ -12,16 +12,17 @@ namespace MonsterNamespace {
 		centaur,
 		goblin,
 		dragon, // boss (not within scope of random function)
+		peasant,
 		max_monsters
 	};
 
-	std::array<std::string, max_monsters> names{"ogre", "centaur", "goblin", "dragon"};
-	std::array<int, max_monsters> HP{ 10, 20, 30, 60 };
-	std::array<int, max_monsters> attack{ 10, 20, 30, 50 };
-	std::array<int, max_monsters> XP{ 10, 20, 30, 10 };
-	std::array<int, max_monsters> gold{ 10, 20, 30, 10 };
-	std::array<int, max_monsters> level{ 1, 2, 3, 4 };
-	std::array<std::string, max_monsters> sound{"ooga", "neigh", "hehe", "roar"};
+	std::array<std::string, max_monsters> names{"ogre", "centaur", "goblin", "dragon", "peasant"};
+	std::array<int, max_monsters> HP{ 10, 20, 30, 60, 4 };
+	std::array<int, max_monsters> damage{ 10, 20, 30, 5 };
+	std::array<int, max_monsters> XP{ 10, 20, 30, 10, 10 };
+	std::array<int, max_monsters> gold{ 10, 20, 30, 10, 6 };
+	std::array<int, max_monsters> level{ 1, 2, 3, 4, 1 };
+	std::array<std::string, max_monsters> sound{"ooga", "neigh", "hehe", "roar", "aahh"};
 
 	/*
 	Entity getRandomMonster() { // remove or modify
@@ -34,7 +35,7 @@ namespace MonsterNamespace {
 	
 
 	Monsters getRandomMonster() { // change to be randomised // accept boss or mob as parameter?? (or make it manual)
-		return dragon;
+		return peasant;
 	}
 }
 
@@ -50,7 +51,7 @@ public:
 		: m_sound{sound[monster]}
 		, Entity{ names[monster]
 		, HP[monster]
-		, attack[monster]
+		, damage[monster]
 		, XP[monster]
 		, gold[monster]
 		, level[monster]} 

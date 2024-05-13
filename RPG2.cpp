@@ -5,6 +5,8 @@
 #include "Game.h"
 #include "Map.h"
 #include "Monster.h"
+#include "Entity.h"
+#include "Item.h"
 
 std::string getName();
 void ignoreLine();
@@ -14,7 +16,13 @@ void welcome();
 bool play(std::string& name);
 void turn(Player& p, Game& g);
 void monsterRound(Player& p, Game& g);
+void bossRound(Player& p, Game& g);
+// void monsterRound(Entity& attacker, Entity& defender);
 char getAction();
+bool searchInventory(Player& p);
+bool attack(int damage, Entity& defender);
+void loot(Player& p, Monster& m);
+void displayStats(Player& p, Monster& m);
 
 int main()
 {
@@ -55,9 +63,7 @@ bool play(std::string& name) {
         std::cout << "Round " << game.getRounds() << '\n';
         Map::drawMap(game);
         turn(player, game);
-        
-        
-        
+       
         //break; // testing
     }
     return false;
@@ -70,7 +76,7 @@ void turn(Player& p, Game& g) {
         char action{ getInput() };
 
         if (move(action, p, g)){ // If move successful, continue.
-            std::cout << "Move successful\n";
+            //std::cout << "Move successful\n";
             break;
         }
         else {
@@ -83,24 +89,25 @@ void turn(Player& p, Game& g) {
 
     switch (currentRoomType) {
     case Map::C: // corridor
-        std::cout << "You continue through the dark corridor\n";
+        std::cout << "You continue through the dark passageways\n";
         break;
     case Map::X:
         std::cout << "You come across the remains of a defeated monster\n";
         break;
     case Map::M:
         monsterRound(p, g);
-        // fight
+        break;
+    case Map::B:
+        std::cout << "Boss room\n";
+        break;
+    case Map::T:
+        std::cout << "Treasure room\n";
         break;
     default: // unknown
         std::cout << "Unknown room\n";
         break;
     }
     // Check user location for what to appear in room
-
-
-
-    //std::cout << "Player at " << map[p.getCoordX()][p.getCoordY()] << '\n';
 
 }
 
@@ -178,7 +185,7 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
             // Update user position and return true
             g.changeLocation(g.getCoordY() + 1, g.getCoordX());
             std::cout << "You moved south\n";
-            std::cout << "South room: " << Map::map[g.getCoordY()][g.getCoordX()] << " Y: " << g.getCoordY() << " X: " << g.getCoordX() << '\n';
+            //std::cout << "South room: " << Map::map[g.getCoordY()][g.getCoordX()] << " Y: " << g.getCoordY() << " X: " << g.getCoordX() << '\n';
             return true;
         }
         break;
@@ -205,27 +212,140 @@ void monsterRound(Player& p, Game& g) {
     Monster monster{ getRandomMonster() };
     //Monster monster{ MonsterNamespace::goblin };
     std::cout << "You encountered a " << monster.getName() << '\n';
-    while (true) {
-        
-        // player action
-        //
-        // switch statement for action
-        //attack(p, monster)
+    while (true) {      
+        displayStats(p, monster);
         char action{ getAction() };
 
-        // monster attack
+        // Flee
+        if (action == 'f') {
+            bool success{}; // Make randomised
+            success = true;
+            if (success) {
+                std::cout << "You escaped\n";
+                break;
+            }
+        }
 
-        // if monster dead, replace map coordinate with defeated monster
+        // Inventory
+        if (action == 'i') {
+            std::cout << "Opening inventory...\n";
+            if (!searchInventory(p)) {
+                continue;
+            }
+            std::cout << p.getEffect() << '\n';
+        }
+
+        // Attack
+        if (action == 'a') {
+            std::cout << "You attacked the " << monster.getName();
+            int damage{ p.getEffect() == PotionNamespace::strength ? p.getAttack() + 10 : p.getAttack() };
+            if (p.getEffect() != PotionNamespace::max_potions)
+                p.removeEffect();
+
+            if (attack(damage, monster)) {
+                std::cout << " for " << damage << " damage\n";
+            }
+            else {
+                std::cout << " and missed\n";
+            }
+        }
         
         if (!monster.checkAlive()) {
             std::cout << "You defeated the " << monster.getName() << '\n';
+            loot(p, monster);
             Map::modifyMap(g.getCoordY(), g.getCoordX(), Map::X);
             break;
         }
-        break; // testing
+        else {
+            std::cout << "The " << monster.getName() << " attacked you ";
+        }
+
+        // If monster is still alive it attacks
+        if (attack(monster.getAttack(), p)) {
+            std::cout << " for " << monster.getAttack() << " damage\n";
+        }
+        else {
+            std::cout << " and missed\n";
+        }
+        
+        if (!p.checkAlive()) {
+            break;
+        }
+        //break; // testing
     }// loop end
 }
 
 char getAction() {
-    return 'a';
+    while (true) {
+        std::cout << "Attack (a), Flee (f), Inventory (i)\n";
+        char action{};
+        std::cin >> action;
+
+        if (action == 'a' || action == 'f' || action == 'i') {
+            return action;
+        }
+    }
+}
+
+bool searchInventory(Player& p) {
+    using namespace PotionNamespace;
+
+    if (p.getInventory().size() <= 0) {
+        std::cout << "Inventory empty\n";
+        return false;
+    }
+
+    std::cout << "0) exit\n";
+    for (std::size_t i{ 0 }; i < p.getInventory().size(); ++i) {
+        std::cout << i + 1 << ") " << potionName[p.getInventory()[i]] << '\n';
+    }
+
+    while (true) {
+        int selection{};
+        std::cin >> selection;
+        if (selection == 0) {
+            return false;
+        }
+        if (selection > 0 && selection <= p.getInventory().size()) {
+            --selection;
+            std::cout << "You drank " << PotionNamespace::potionName[p.getInventory()[selection]] << '\n';
+            p.addEffect(p.getInventory()[selection]);
+            return true;
+        }
+    }
+}
+
+bool attack(int damage, Entity& defender) {
+    bool success{ true }; // randomise
+    if (success) {
+        defender.setHP(defender.getHP() - damage);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void loot(Player& p, Monster& m) {
+    PotionNamespace::Potions itemFound{ PotionNamespace::strength };
+    p.addGold(m.getGold());
+    p.addXP(m.getXP());
+    p.addToInventory(itemFound);
+    std::cout << "You found:\n +" << PotionNamespace::potionName[itemFound] << '\n';
+    std::cout << " +" << m.getGold() << " gold\n";
+    // xp
+}
+
+void bossRound(Player& p, Game& g) {
+    std::cout << "Boss round\n";
+}
+
+void displayStats(Player& p, Monster& m) {
+    std::cout << p.getName() << '\n';
+    std::cout << "HP: " << p.getHP() << '/' << p.getMaxHP() << "  ";
+    std::cout << "ATK: " << p.getAttack() << "\n";
+
+    std::cout << m.getName() << '\n';
+    std::cout << "HP: " << m.getHP() << '/' << m.getMaxHP() << "  ";
+    std::cout << "ATK: " << m.getAttack() << "\n\n";
 }
