@@ -7,6 +7,7 @@
 #include "Monster.h"
 #include "Entity.h"
 #include "Item.h"
+#include "Random.h"
 
 std::string getName();
 void ignoreLine();
@@ -161,7 +162,7 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
             }
             // Update user position and return true
             g.changeLocation(g.getCoordY() - 1, g.getCoordX());
-            std::cout << "You moved north\n";
+            //std::cout << "You moved north\n";
             return true;
         }
         break;
@@ -172,7 +173,7 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
                 break;
             }
             g.changeLocation(g.getCoordY(), g.getCoordX() - 1);
-            std::cout << "You moved west\n";
+            //std::cout << "You moved west\n";
             return true;
         }
         break; 
@@ -184,7 +185,7 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
             }
             // Update user position and return true
             g.changeLocation(g.getCoordY() + 1, g.getCoordX());
-            std::cout << "You moved south\n";
+            //std::cout << "You moved south\n";
             //std::cout << "South room: " << Map::map[g.getCoordY()][g.getCoordX()] << " Y: " << g.getCoordY() << " X: " << g.getCoordX() << '\n';
             return true;
         }
@@ -206,11 +207,12 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
 }
 
 void monsterRound(Player& p, Game& g) {
-    std::cout << "Monster fight\n"; // test
+    //std::cout << "Monster fight\n"; // test
         
     // generate monster
-    Monster monster{ getRandomMonster() };
+    Monster monster{ peasant };
     //Monster monster{ MonsterNamespace::goblin };
+    std::cout << "**Monster appeared**\n";
     std::cout << "You encountered a " << monster.getName() << '\n';
     while (true) {      
         displayStats(p, monster);
@@ -327,12 +329,17 @@ bool attack(int damage, Entity& defender) {
 }
 
 void loot(Player& p, Monster& m) {
-    PotionNamespace::Potions itemFound{ PotionNamespace::strength };
+    
+    std::cout << "You found:\n";
     p.addGold(m.getGold());
-    p.addXP(m.getXP());
-    p.addToInventory(itemFound);
-    std::cout << "You found:\n +" << PotionNamespace::potionName[itemFound] << '\n';
     std::cout << " +" << m.getGold() << " gold\n";
+    if (Random::get(1, 3) == 1) {
+        PotionNamespace::Potions randomPotion{ static_cast<PotionNamespace::Potions>(Random::get(0, PotionNamespace::max_potions - 1)) };
+        //PotionNamespace::Potions itemFound{ PotionNamespace::strength };
+        p.addToInventory(randomPotion);
+        std::cout << " +" << PotionNamespace::potionName[randomPotion] << '\n';
+    }
+    p.addXP(m.getXP());
     // xp
 }
 

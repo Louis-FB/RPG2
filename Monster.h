@@ -4,6 +4,7 @@
 #include <string>
 #include <array>
 #include <cassert>
+#include "Random.h"
 
 namespace MonsterNamespace {
 	// generate function
@@ -35,7 +36,7 @@ namespace MonsterNamespace {
 	
 
 	Monsters getRandomMonster() { // change to be randomised // accept boss or mob as parameter?? (or make it manual)
-		return peasant;
+		return static_cast<Monsters>(Random::get(0, max_monsters));
 	}
 }
 
