@@ -20,7 +20,7 @@ namespace Map {
         {W, C, C, C, W, W, C, C, W, C, W},
         {C, C, W, W, C, C, W, C, C, C, W},
         {C, W, C, W, M, W, C, C, W, C, W},
-        {C, C, C, W, C, B, W, C, C, C, C},
+        {C, C, C, W, C, S, W, C, C, C, C},
         {W, C, C, C, C, C, C, C, C, T, B},
         {C, C, W, C, W, C, W, W, W, C, C},
         {C, W, W, C, C, C, C, W, C, C, W},

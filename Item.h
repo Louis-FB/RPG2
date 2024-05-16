@@ -11,4 +11,6 @@ namespace PotionNamespace {
 	};
 
 	std::array<std::string, Potions::max_potions> potionName{ "health potion", "invisibility potion", "strength potion" };
+	std::array<int, Potions::max_potions> potionCost{ 2, 20, 30 };
+
 }

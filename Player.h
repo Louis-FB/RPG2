@@ -35,6 +35,8 @@ public:
 
 	void addXP(int XP) { m_xp += XP; }
 
+	void removeGold(int gold) { m_gold -= gold; } // or it works with addGold() already when passing negative??
+
 	/*
 	void changeLocation(int y, int x) { // Moves across multidimensional array. Logic validated in game.
 		m_location.m_y = y;

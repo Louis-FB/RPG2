@@ -24,6 +24,7 @@ bool searchInventory(Player& p);
 bool attack(int damage, Entity& defender);
 void loot(Player& p, Monster& m);
 void displayStats(Player& p, Monster& m);
+void shopRoom(Player& p, Game& g);
 
 int main()
 {
@@ -100,6 +101,9 @@ void turn(Player& p, Game& g) {
         break;
     case Map::B:
         std::cout << "Boss room\n";
+        break;
+    case Map::S:
+        shopRoom(p, g);
         break;
     case Map::T:
         std::cout << "Treasure room\n";
@@ -345,6 +349,50 @@ void loot(Player& p, Monster& m) {
 
 void bossRound(Player& p, Game& g) {
     std::cout << "Boss round\n";
+}
+
+void shopRoom(Player& p, Game& g) {
+    std::cout << "You come across a merchant selling his wares for gold\n";
+    std::cout << "Do you want to buy anything? (y/n)\n";
+    
+    char option{};
+    while (true) {
+        char choice{};
+        std::cin >> choice;
+        if (choice == 'y' || choice == 'n') {
+            option = choice;
+            break;
+        }
+    }
+    
+    if (option == 'y') {
+        std::cout << "0) exit\n";
+        for (int i{ 0 }; i < PotionNamespace::max_potions; ++i) {
+            std::cout << i + 1 << ") " << PotionNamespace::potionName[i] << " (" << PotionNamespace::potionCost[i] << " gold)\n";
+        }
+        while (true) {
+            // get input
+            int choice{};
+            std::cin >> choice;
+            if (choice == 0) {
+                break;
+            } // exit
+            else if (choice > 0 && choice < PotionNamespace::max_potions) {
+                --choice;
+                if (p.getGold() - PotionNamespace::potionCost[choice] >= 0) {
+                    p.removeGold(PotionNamespace::potionCost[choice]);
+                    p.addToInventory(static_cast<PotionNamespace::Potions>(choice));
+                    std::cout << "You bought a " << PotionNamespace::potionName[choice] << " for " << PotionNamespace::potionCost[choice] << " gold.\n";
+                    break;
+                }
+                else {
+                    std::cout << "You cannot afford that potion\n";
+                    continue;
+                }
+            }
+
+        }
+    }
 }
 
 void displayStats(Player& p, Monster& m) {
