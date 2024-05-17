@@ -17,7 +17,7 @@ void welcome();
 bool play(std::string& name);
 void turn(Player& p, Game& g);
 void monsterRound(Player& p, Game& g, bool boss);
-void bossRound(Player& p, Game& g);
+//void bossRound(Player& p, Game& g);
 // void monsterRound(Entity& attacker, Entity& defender);
 char getAction();
 bool searchInventory(Player& p);
@@ -25,6 +25,7 @@ bool attack(int damage, Entity& defender);
 void loot(Player& p, Monster& m);
 void displayStats(Player& p, Monster& m);
 void shopRoom(Player& p, Game& g);
+void treasureRoom(Player& p, Game& g);
 
 int main()
 {
@@ -106,7 +107,7 @@ void turn(Player& p, Game& g) {
         shopRoom(p, g);
         break;
     case Map::T:
-        std::cout << "Treasure room\n";
+        treasureRoom(p, g);
         break;
     default: // unknown
         std::cout << "Unknown room\n";
@@ -229,11 +230,13 @@ void monsterRound(Player& p, Game& g, bool boss = 0) {
 
         // Flee
         if (action == 'f') {
-            bool success{}; // Make randomised
-            success = true;
-            if (success) {
+            int success{Random::get(0, 1)}; // Make randomised
+            if (success == 1) {
                 std::cout << "You escaped\n";
                 break;
+            }
+            else {
+                std::cout << "You failed to escape\n";
             }
         }
 
@@ -244,6 +247,15 @@ void monsterRound(Player& p, Game& g, bool boss = 0) {
                 continue;
             }
             std::cout << p.getEffect() << '\n';
+            if (p.getEffect() == PotionNamespace::health) {
+                std::cout << "You healed yourself with a health potion\n";
+                p.removeEffect();
+            }
+            else if (p.getEffect() == PotionNamespace::invisibility) {
+                std::cout << "You drank a potion of invisibility and slipped away unnoticed\n";
+                p.removeEffect();
+                break;
+            }
         }
 
         // Attack
@@ -356,10 +368,12 @@ void loot(Player& p, Monster& m) {
     // xp
 }
 
+/*
 void bossRound(Player& p, Game& g) {
     std::cout << "**Boss appeared**\n";
     Monster monster{ dragon };
 }
+*/
 
 void shopRoom(Player& p, Game& g) {
     std::cout << "You come across a merchant selling his wares for gold\n";
@@ -403,6 +417,43 @@ void shopRoom(Player& p, Game& g) {
 
         }
     }
+}
+
+void treasureRoom(Player& p, Game& g) {
+    std::cout << "You come across a room with a chest in the middle. \nDo you want to open it? (y/n)\n";
+    char option{};
+    while (true) {
+        char choice{};
+        std::cin >> choice;
+        if (choice == 'y' || choice == 'n') {
+            option = choice;
+            break;
+        }
+    }
+
+    if (option == 'y') {
+        std::cout << "You opened the chest\n";
+        bool success{false};
+        if (Random::get(0, 1) == 1)
+            success = true;
+
+        if (success) {
+            std::cout << "And found ";
+            int gold{ Random::get(10, 30) };
+            std::cout << gold << " gold\n";
+        }
+        else {
+            std::cout << "And it exploded, damaging you for ";
+            int damage{ Random::get(10, 30) };
+            std::cout << damage << " health\n";
+            p.setHP(p.getHP() - damage);
+        }
+    }
+    else {
+        std::cout << "You moved on\n";
+    }
+    Map::modifyMap(g.getCoordY(), g.getCoordX(), Map::C);
+    // mark map
 }
 
 void displayStats(Player& p, Monster& m) {

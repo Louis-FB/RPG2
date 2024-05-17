@@ -4,16 +4,16 @@
 #include "Entity.h"
 #include "Item.h"
 
-class Player: public Entity  {
+class Player : public Entity {
 private:
 	std::string m_name{};
 	// current position?
-	std::vector<PotionNamespace::Potions> m_inventory{PotionNamespace::health, PotionNamespace::strength};
-	PotionNamespace::Potions m_effect{PotionNamespace::max_potions};
+	std::vector<PotionNamespace::Potions> m_inventory{ PotionNamespace::health, PotionNamespace::strength };
+	PotionNamespace::Potions m_effect{ PotionNamespace::max_potions };
 	bool m_defeatedBoss{};
 public:
 	Player(std::string name)
-		: Entity{name}
+		: Entity{ name }
 	{};
 
 	bool hasWon() { // or move to game class
@@ -31,10 +31,18 @@ public:
 	PotionNamespace::Potions getEffect() { return m_effect; }
 
 	void removeEffect() { m_effect = PotionNamespace::max_potions; }
-	
+
 	void addGold(int gold) { m_gold += gold; }
 
-	void addXP(int XP) { m_xp += XP; }
+	void addXP(int XP) { m_xp += XP; this->levelUp(); }
+
+	void levelUp() {
+		int newLevel{ m_xp / 100 };
+		if (newLevel > m_level) {
+			m_level = newLevel;
+			std::cout << "You are now level " << m_level << '\n';
+		}
+	}
 
 	void removeGold(int gold) { m_gold -= gold; } // or it works with addGold() already when passing negative??
 
@@ -45,7 +53,7 @@ public:
 		m_location.m_y = y;
 		m_location.m_x = x;
 	};
-	
+
 	Location& getLocation() {
 		return m_location;
 	}
@@ -58,6 +66,4 @@ public:
 		return m_location.m_x;
 	}
 	*/
-	
-
 };

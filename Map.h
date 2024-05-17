@@ -21,12 +21,13 @@ namespace Map {
         {C, C, W, W, C, C, W, C, C, C, W},
         {C, W, C, W, M, W, C, C, W, C, W},
         {C, C, C, W, C, S, W, C, C, C, C},
-        {W, C, C, C, C, C, C, C, C, T, B},
+        {W, C, C, C, C, C, T, C, C, T, B}, //
         {C, C, W, C, W, C, W, W, W, C, C},
         {C, W, W, C, C, C, C, W, C, C, W},
         {C, C, C, W, W, W, B, W, C, W, C},
         {W, W, C, C, C, W, M, C, C, C, C},
         {W, C, C, W, C, C, T, W, C, W, W},
+                        //
     };
 
     int blankMap[ROW][COL]{ // Guide of discovered locations 1 = discovered, 0 = undiscovered

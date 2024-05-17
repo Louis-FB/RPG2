@@ -20,7 +20,7 @@ namespace MonsterNamespace {
 	std::array<std::string, max_monsters> names{"ogre", "centaur", "goblin", "peasant", "dragon" };
 	std::array<int, max_monsters> HP{ 10, 20, 30, 3, 4 };
 	std::array<int, max_monsters> damage{ 10, 20, 1, 5 };
-	std::array<int, max_monsters> XP{ 10, 20, 30, 10, 10 };
+	std::array<int, max_monsters> XP{ 200, 200, 200, 200, 200 };
 	std::array<int, max_monsters> gold{ 10, 20, 30, 10, 6 };
 	std::array<int, max_monsters> level{ 1, 2, 3, 4, 1 };
 	std::array<std::string, max_monsters> sound{"ooga", "neigh", "hehe", "roar", "aahh"};
