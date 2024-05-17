@@ -10,13 +10,14 @@ private:
 	// current position?
 	std::vector<PotionNamespace::Potions> m_inventory{PotionNamespace::health, PotionNamespace::strength};
 	PotionNamespace::Potions m_effect{PotionNamespace::max_potions};
+	bool m_defeatedBoss{};
 public:
 	Player(std::string name)
 		: Entity{name}
 	{};
 
 	bool hasWon() { // or move to game class
-		return this->getLevel() >= 10; // or another condition
+		return this->getLevel() >= 10 || this->m_defeatedBoss; // or another condition
 	}
 
 	void addToInventory(PotionNamespace::Potions item) { m_inventory.push_back(item); }
@@ -36,6 +37,8 @@ public:
 	void addXP(int XP) { m_xp += XP; }
 
 	void removeGold(int gold) { m_gold -= gold; } // or it works with addGold() already when passing negative??
+
+	void setVictory() { m_defeatedBoss = true; }
 
 	/*
 	void changeLocation(int y, int x) { // Moves across multidimensional array. Logic validated in game.

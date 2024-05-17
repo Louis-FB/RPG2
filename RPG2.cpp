@@ -16,7 +16,7 @@ bool move(char direction, Player& p, Game& g);
 void welcome();
 bool play(std::string& name);
 void turn(Player& p, Game& g);
-void monsterRound(Player& p, Game& g);
+void monsterRound(Player& p, Game& g, bool boss);
 void bossRound(Player& p, Game& g);
 // void monsterRound(Entity& attacker, Entity& defender);
 char getAction();
@@ -97,10 +97,10 @@ void turn(Player& p, Game& g) {
         std::cout << "You come across the remains of a defeated monster\n";
         break;
     case Map::M:
-        monsterRound(p, g);
+        monsterRound(p, g, 0);
         break;
     case Map::B:
-        std::cout << "Boss room\n";
+        monsterRound(p, g, 1);
         break;
     case Map::S:
         shopRoom(p, g);
@@ -210,13 +210,18 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
     return false;
 }
 
-void monsterRound(Player& p, Game& g) {
+void monsterRound(Player& p, Game& g, bool boss = 0) {
     //std::cout << "Monster fight\n"; // test
         
     // generate monster
-    Monster monster{ peasant };
-    //Monster monster{ MonsterNamespace::goblin };
-    std::cout << "**Monster appeared**\n";
+    Monster monster{ !boss ? MonsterNamespace::getRandomMonster() : dragon };
+    //Monster monster{ MonsterNamespace::getRandomMonster() };
+    if (!boss) {
+        std::cout << "**Monster appeared**\n";
+    }
+    else {
+        std::cout << "**Boss appeared**\n";
+    }
     std::cout << "You encountered a " << monster.getName() << '\n';
     while (true) {      
         displayStats(p, monster);
@@ -260,6 +265,8 @@ void monsterRound(Player& p, Game& g) {
             std::cout << "You defeated the " << monster.getName() << '\n';
             loot(p, monster);
             Map::modifyMap(g.getCoordY(), g.getCoordX(), Map::X);
+            if (boss)
+                p.setVictory();
             break;
         }
         else {
@@ -343,12 +350,15 @@ void loot(Player& p, Monster& m) {
         p.addToInventory(randomPotion);
         std::cout << " +" << PotionNamespace::potionName[randomPotion] << '\n';
     }
+    if(m.isBoss())
+        std::cout << " +golden fleece\n";
     p.addXP(m.getXP());
     // xp
 }
 
 void bossRound(Player& p, Game& g) {
-    std::cout << "Boss round\n";
+    std::cout << "**Boss appeared**\n";
+    Monster monster{ dragon };
 }
 
 void shopRoom(Player& p, Game& g) {
