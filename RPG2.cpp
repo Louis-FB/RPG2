@@ -211,11 +211,74 @@ bool move(char direction, Player& p, Game& g) { // bounds checking and check if 
     return false;
 }
 
+void updateMonsterData(Monster& m, Location l) {
+    for (int i{ 0 }; i < monsterHistory.size(); ++i) {
+        if (monsterHistory[i].getLocation() == l) {
+            monsterHistory[i].updateMonster(m);
+        }
+    }
+}
+
+Monster fetchMonster(Player& p, Game& g, bool boss = 0) {
+    bool foundMonster{ false };
+    int monsterIndex{};
+    for (int i{ 0 }; i < monsterHistory.size(); ++i) {
+        if (monsterHistory[i].getLocation() == g.getLocation()) {
+            foundMonster = true;
+            monsterIndex = i;
+            std::cout << "Monster matched\n";
+            std::cout << monsterHistory[i].getID() << '\n';
+        }
+    }
+    if (!foundMonster) {
+        Monster monster{ !boss ? MonsterNamespace::getRandomMonster() : dragon };
+        monsterHistory.emplace_back(Random::get(0, 99), Location(g.getLocation()), Monster(monster));
+        return monster;
+    }
+    else {
+        // create monster with index of map
+        
+        return Monster{ monsterHistory[monsterIndex].getMonster() };
+    }
+}
+
 void monsterRound(Player& p, Game& g, bool boss = 0) {
     //std::cout << "Monster fight\n"; // test
         
-    // generate monster
-    Monster monster{ !boss ? MonsterNamespace::getRandomMonster() : dragon };
+
+    // loop over MonsterHistory
+    // 
+    //Check if room has monster, if not create
+    
+    //std::cout << "Starting monster round\n";
+    /*
+    bool foundMonster{true};
+    int monsterIndex{};
+    for (int i{ 0 }; i < monsterHistory.size(); ++i) {
+        if (monsterHistory[i].getLocation() == g.getLocation()) {
+            foundMonster = true;
+            monsterIndex = i;
+            std::cout << "Monster matched\n";
+            std::cout << monsterHistory[i].getID() << '\n';
+        }
+    }
+    if (!foundMonster) {
+        Monster monster{ !boss ? MonsterNamespace::getRandomMonster() : dragon };
+        monsterHistory.emplace_back(Random::get(0, 99), Location(g.getLocation()), Monster(monster));
+    }
+    else {
+        // create monster with index of map
+        Monster monster{ monsterHistory[monsterIndex].getMonster() };
+    }
+    */
+
+    Monster monster{ fetchMonster(p, g, boss) };
+    
+    //std::cout << "Current location: " << g.getLocation() << '\n';
+
+    //Monster monster{ !boss ? MonsterNamespace::getRandomMonster() : dragon };
+    
+
     //Monster monster{ MonsterNamespace::getRandomMonster() };
     if (!boss) {
         std::cout << "**Monster appeared**\n";
@@ -267,6 +330,7 @@ void monsterRound(Player& p, Game& g, bool boss = 0) {
 
             if (attack(damage, monster)) {
                 std::cout << " for " << damage << " damage\n";
+                updateMonsterData(monster, g.getLocation());
             }
             else {
                 std::cout << " and missed\n";

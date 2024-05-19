@@ -12,7 +12,7 @@ protected:
 	int m_level{};
 
 public:
-	Entity(std::string name = "anonymous", int maxHP = 10, int attack = 20, int xp = 0, int gold = 0, int level = 0)
+	Entity(std::string name = "anonymous", int maxHP = 100, int attack = 2, int xp = 0, int gold = 0, int level = 0)
 		: m_name{ name }
 		, m_maxHP{ maxHP }
 		, m_hp{ maxHP }
