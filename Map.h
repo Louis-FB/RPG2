@@ -17,15 +17,15 @@ namespace Map {
 
     mapSymbols map[ROW][COL]{
         {B, C, W, C, C, C, C, W, W, C, C},
-        {W, C, C, C, W, W, C, C, W, C, W},
+        {W, C, M, C, W, W, C, C, W, C, W},
         {C, C, W, W, C, C, W, C, C, C, W},
         {C, W, C, W, M, W, C, C, W, C, W},
-        {C, C, C, W, C, S, W, C, C, C, C},
+        {C, M, C, W, C, M, W, C, C, C, C},
         {W, C, C, C, C, C, T, C, C, T, C}, //
         {C, C, W, C, W, C, W, W, W, C, C},
-        {C, W, W, C, C, C, C, W, C, C, W},
-        {C, C, C, W, W, W, M, W, C, W, C},
-        {W, W, C, C, C, W, C, C, C, C, C},
+        {C, W, W, C, C, C, C, W, M, C, W},
+        {C, C, C, W, W, W, M, W, M, W, C},
+        {W, W, C, M, C, W, C, C, C, C, C},
         {W, C, C, W, C, C, T, W, C, W, W},
                         //
     };

@@ -82,9 +82,11 @@ void turn(Player& p, Game& g) {
             //std::cout << "Move successful\n";
             break;
         }
+        /*
         else {
             std::cout << "Move failed\n";
         }
+        */
     }
 
     Map::mapSymbols currentRoomType{ Map::map[g.getCoordY()][g.getCoordX()] };
@@ -312,6 +314,7 @@ void monsterRound(Player& p, Game& g, bool boss = 0) {
             std::cout << p.getEffect() << '\n';
             if (p.getEffect() == PotionNamespace::health) {
                 std::cout << "You healed yourself with a health potion\n";
+                p.setHP(p.getMaxHP());
                 p.removeEffect();
             }
             else if (p.getEffect() == PotionNamespace::invisibility) {

@@ -18,12 +18,12 @@ namespace MonsterNamespace {
 	};
 
 	std::array<std::string, max_monsters> names{"ogre", "centaur", "goblin", "peasant", "dragon" };
-	std::array<int, max_monsters> HP{ 10, 20, 30, 3, 4 };
-	std::array<int, max_monsters> damage{ 10, 20, 1, 5 };
-	std::array<int, max_monsters> XP{ 200, 200, 200, 200, 200 };
-	std::array<int, max_monsters> gold{ 10, 20, 30, 10, 6 };
+	std::array<int, max_monsters> HP{ 10, 20, 30, 3, 100 };
+	std::array<int, max_monsters> damage{ 10, 20, 1, 15 };
+	std::array<int, max_monsters> XP{ 80, 90, 50, 10, 700 };
+	std::array<int, max_monsters> gold{ 10, 20, 30, 1, 90 };
 	std::array<int, max_monsters> level{ 1, 2, 3, 4, 1 };
-	std::array<std::string, max_monsters> sound{"ooga", "neigh", "hehe", "roar", "aahh"};
+	std::array<std::string, max_monsters> sound{"ooga", "neigh", "hehe", "ahhh", "roar"};
 
 	/*
 	Entity getRandomMonster() { // remove or modify
@@ -36,7 +36,7 @@ namespace MonsterNamespace {
 	
 
 	Monsters getRandomMonster() { // change to be randomised // accept boss or mob as parameter?? (or make it manual)
-		return static_cast<Monsters>(Random::get(0, max_monsters - 1));
+		return static_cast<Monsters>(Random::get(0, peasant));
 	}
 }
 

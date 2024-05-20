@@ -22,6 +22,8 @@ public:
 
 	void addToInventory(PotionNamespace::Potions item) { m_inventory.push_back(item); }
 
+	void setAttack(int attack) { m_attack = attack; }
+
 	std::vector<PotionNamespace::Potions> getInventory() {
 		return m_inventory;
 	}
@@ -41,6 +43,7 @@ public:
 		if (newLevel > m_level) {
 			m_level = newLevel;
 			std::cout << "You are now level " << m_level << '\n';
+			setAttack(m_level * 1.2);
 		}
 	}
 
